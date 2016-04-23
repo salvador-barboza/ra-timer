@@ -1,0 +1,71 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<dom-module id="test-element">
+<template>
+  <h1>{{computeTime(time)}}</h1>
+  <button on-click="startTimer">start</button>
+  <button on-click="endTimer">end</button>
+  <input type="number" id="time" value="60">
+</template>  
+<script>
+  (function() {
+    'use strict';
+    class TestElement {
+      beforeRegister() {
+        this.is = 'test-element';
+        this.properties = {
+          msg: {
+            type: String,
+            value: 'hola'
+          },
+          currentTimer: {
+            type: Number            
+          },
+          time: {
+            type: Number,
+            value: 0
+          },
+          alarm: {
+            type: Number,
+            value: 60
+          }
+        };        
+      }
+      startTimer() {  
+        if(this.currentTimer == undefined) {
+          this.time = 0;
+          this.alarm = parseInt(this.$.time.value);
+          
+          this.currentTimer = window.setInterval(this.count.bind(this), 1000);  
+        }              
+      } 
+      endTimer() {
+        if(this.currentTimer) {
+          window.clearInterval(this.currentTimer);
+          this.currentTimer = undefined;
+          this.time = 0;
+        }
+      }    
+            
+      count() {
+        this.time += 1;
+        if(this.time === this.alarm) {
+          console.log('time');
+          this.endTimer();
+        }
+      }
+      computeTime(time) {
+        var seconds  = time % 60;
+        var minutes = Math.floor(time / 60) ;
+        return  minutes + ':' + (seconds.toString().length == 1 ? '0' + seconds : seconds);  
+      }
+    }
+    Polymer(TestElement);
+  })();
+  // (function() {
+  //   'use strict';
+  //   Polymer({
+  //     is: 'test-element'     
+  //   });
+  // })();
+  </script>
+</dom-module>

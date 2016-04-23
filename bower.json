@@ -1,0 +1,22 @@
+{
+  "name": "timer",
+  "description": "",
+  "main": "main.js",
+  "authors": [
+    "Salvador Barboza <salvador.barboza.portillo@gmail.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  }
+}
