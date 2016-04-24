@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="elements/test-element.html">
-  </head>
-  <body>
-    <h1>Hello World!</h1>  
-    <test-element></test-element>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Timer</title>
+  <script>
+    window.nodeRequire = require;
+    delete window.require;
+    delete window.exports;
+    delete window.module;
+  </script>
+  <script src="bower_components/tone/build/Tone.js"></script>
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="elements/test-element.html">
+  <style>
+    html {
+      background-color: cadetblue;
+    }
+  </style>
+</head>
+<body>
+  <test-element></test-element>
+</body>
+
 </html>
