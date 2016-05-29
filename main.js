@@ -21,7 +21,7 @@ app.on('window-all-closed', function() {
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 400, height: 280, resizable: false, titleBarStyle: 'hidden-inset'});
+  mainWindow = new BrowserWindow({width: 400, height: 280, resizable: false, titleBarStyle: 'hidden-inset', title:'Timesturión'});
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');

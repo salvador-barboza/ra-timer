@@ -60,13 +60,13 @@
 
     <div id="controls">
       <paper-fab id="button" on-tap="action" icon="[[icon]]"></paper-fab>  
-      <paper-slider min="1" max="60" value="25" id="time" pin snaps hidden="[[running]]"></paper-slider>
+      <paper-slider min="1" max="60" value="25" id="time" pin snaps hidden="{{running}}"></paper-slider>
     </div>
 </template>  
 <script>
 var synth = new Tone.PolySynth(6, Tone.DuoSynth).toMaster();
 synth.set("detune", -1200);
-synth.volume.value = -7;
+synth.volume.value = -8;
   (function() {
     'use strict';
     class TestElement {
@@ -103,10 +103,10 @@ synth.volume.value = -7;
           this.startTimer()
         }
                 
-        this.running = !this.running;
       }
       startTimer() {  
         if(this.currentTimer == undefined) {
+          this.running = true;
           this.time = Number(this.$.time.value) * 60;                    
           this.currentTimer = window.setInterval(this.count.bind(this), 1000);  
         }              
@@ -118,6 +118,8 @@ synth.volume.value = -7;
           window.clearInterval(this.currentTimer);
           this.currentTimer = undefined;
           this.time = 0;
+          this.running = false;
+          this.icon = 'av:play-arrow';
         }
       }    
                   
@@ -125,7 +127,7 @@ synth.volume.value = -7;
         this.time -= 1;
         if(this.time === 0) {
           console.log('time');
-           synth.triggerAttackRelease(["C4", "E4", "G4","B4"], "6n");         
+           synth.triggerAttackRelease(['C4', 'E4', 'G4','B4','C2'], '3n');         
             this.endTimer();
         }
       }
