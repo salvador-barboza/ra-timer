@@ -3,6 +3,7 @@
 const electron = require('electron');
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
+const {ipcMain} = require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -16,19 +17,21 @@ app.on('window-all-closed', function() {
     app.quit();
   }
 });
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 200, height: 200 /*, resizable: false*/});
+  mainWindow = new BrowserWindow({width: 400, height: 280, resizable: false, titleBarStyle: 'hidden-inset'});
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
+  // mainWindow.webContents.openDevTools();
+ 
+    ipcMain.on('endTimer', function() {
+      mainWindow.show();
+    });
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows

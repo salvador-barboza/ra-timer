@@ -1,65 +1,72 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+
 <link href='https://fonts.googleapis.com/css?family=Yantramanav:400,100,300' rel='stylesheet' type='text/css'>
 <dom-module id="test-element">
+  <!--
+    TODO:
+    poner vars para el styling
+    poner componente para volumen
+    hacer global el two para sacarlo de aqui y mover los procesos a un autobinding enfrente
+    poner una pantalla aparte para el tiempo
+  -->
   <style>
     :host {
       font-family: 'Yantramanav';
       font-weight: 100;
       margin: auto;
-      display: block;     
-    }
+      display: flex;
+      flex-direction: column;
+      align-items:center;
+     }
     #timer {
       padding: auto;
+      color: #f0f0f0;
       margin: auto;
-      font-size: 10em;
-      width: 300px;
-    }
-    p {
-      width: 100%;
-      padding: 0;
-      margin: 0;
-    }
+      margin-bottom: -35px;
+      font-size: 9em;
+      width: 350px;
+      text-align: center;
+      overflow: hidden;
+    }   
     #controls {
       width: 300px;
       margin: auto;
-      display: flex;
-      flex-direction: row;
+       display: flex;
+      flex-direction: column;
+       align-items: center;
+
     }
-    paper-button {
+    paper-fab {
+      --paper-fab-background: #fff;
+      --paper-fab-keyboard-focus-background: #cc0000;	
+      --iron-icon-fill-color: #E81219;      
+    }
+    paper-slider {
       width: 100%;
-      background: #ED6A5A; 
+      --paper-slider-active-color: #fff;
+      --paper-slider-knob-color:#f0f0f0;
+      --paper-slider-pin-color: #f0f0f0;  
+      --paper-slider-font-color: #54494B;   
     }
   </style>
 <template>
-  <div id="timer">
+  <div id="timer">    
     <span>{{computeTime(time)}}</span>
   </div>  
-  <div id="controls">
-    <paper-button on-tap="startTimer"raised >start</paper-button>
-    <paper-button on-tap="endTimer" raised>end</paper-button>
-  </div>
-  <br>  <br>
-  <br>
-  <br>
-  <br>
 
-      <input type="number" id="time" value="60">  
-
+    <div id="controls">
+      <paper-fab id="button" on-tap="action" icon="[[icon]]"></paper-fab>  
+      <paper-slider min="1" max="60" value="25" id="time" pin snaps hidden="[[running]]"></paper-slider>
+    </div>
 </template>  
 <script>
-  var chorus = new Tone.Chorus().toMaster();;
-
-  var synth = new Tone.MonoSynth({
-        "oscillator" : {
-          "type" : "sine"
-        
-      },
-      "envelope" : {
-        "attack" : .5
-      }
-    }).toMaster();;
-    synth.connect(chorus);
+var synth = new Tone.PolySynth(6, Tone.DuoSynth).toMaster();
+synth.set("detune", -1200);
+synth.volume.value = -7;
   (function() {
     'use strict';
     class TestElement {
@@ -76,8 +83,27 @@
           time: {
             type: Number,
             value: 0
+          },
+          running: {
+            type: Boolean,
+            value: false
+          },
+          icon: {
+            type: String,
+            value: 'av:play-arrow'
           }
         };        
+      }
+      action() {
+        if(this.running) {
+          this.endTimer()
+          this.icon = 'av:play-arrow';
+        }else {
+          this.icon = 'av:pause';
+          this.startTimer()
+        }
+                
+        this.running = !this.running;
       }
       startTimer() {  
         if(this.currentTimer == undefined) {
@@ -87,6 +113,8 @@
       } 
       endTimer() {
         if(this.currentTimer) {
+          console.log(ipcRenderer);
+          ipcRenderer.send('endTimer');
           window.clearInterval(this.currentTimer);
           this.currentTimer = undefined;
           this.time = 0;
@@ -97,8 +125,8 @@
         this.time -= 1;
         if(this.time === 0) {
           console.log('time');
-          var e = synth.triggerAttackRelease('c5','7n');
-          this.endTimer();
+           synth.triggerAttackRelease(["C4", "E4", "G4","B4"], "6n");         
+            this.endTimer();
         }
       }
       computeTime(time) {
