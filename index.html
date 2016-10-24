@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Timer</title>
-  <script>
-    window.nodeRequire = require;
-    delete window.require;
-    delete window.exports;
-    delete window.module;
-    const {ipcRenderer} = window.nodeRequire('electron');
 
-  </script>
-  <script src="bower_components/tone/build/Tone.js"></script>
-  <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-  <link rel="import" href="elements/test-element.html">
-  <style>
-    html, body {
-      background-color: #E81219;
-    }
-  </style>
+<head>
+	<meta charset="UTF-8">
+	<title>Timer</title>
+	<script>
+		window.nodeRequire = require;
+		delete window.require;
+		delete window.exports;
+		delete window.module;
+		const {
+			ipcRenderer
+		} = window.nodeRequire('electron');
+	</script>
+	<script src="bower_components/tone/build/Tone.js"></script>
+	<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+	<link rel="import" href="elements/ma-timer.html">
+	<style is="custom-style">
+		html,body {
+			padding: 0;
+		}
+
+		#timer {
+			--main-color: #73BFB8;
+			--accent-color: #E55812;
+		}
+	</style>
 </head>
-<body unresolved>
-  <test-element></test-element>
+
+<body unresolved is>
+	<ma-timer id="timer"></ma-timer>
 </body>
 
 </html>

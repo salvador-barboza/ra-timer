@@ -1,0 +1,125 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+
+<link href='https://fonts.googleapis.com/css?family=Yantramanav:400,100,300' rel='stylesheet' type='text/css'>
+
+<dom-module id="ma-timer">
+	<style>
+		:host {
+			font-family: 'Yantramanav';
+			background: var(--main-color, #1B5299);
+			font-weight: 100;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		#timer {
+			color: #f0f0f0;
+			margin: auto;
+			margin-bottom: -35px;
+			font-size: 9em;
+			width: 350px;
+			text-align: center;
+			overflow: hidden;
+		}
+
+		#controls {
+			width: 300px;
+			margin: auto;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		paper-fab {
+			--paper-fab-background: rgba(256, 256, 256, 0.6);;
+			--iron-icon-fill-color: var(--accent-color, #E81219);
+		}
+
+		paper-slider {
+			--paper-slider-active-color: #fff;
+			--paper-slider-knob-color: var(--accent-color, #E81219);
+			--paper-slider-pin-color: #fff;
+			--paper-slider-font-color: var(--accent-color, #E81219);
+		}
+
+	</style>
+
+	<template>
+  <div id="timer">
+    <span>{{_formatTime(time)}}</span>
+  </div>
+  <div id="controls">
+    <paper-fab id="button" on-tap="_toggleTimer" icon="av:play-arrow"></paper-fab>
+    <paper-slider min="1" max="60" value="25" id="time" pin snaps></paper-slider>
+  </div>
+</template>
+
+	<script>
+		/*TODO
+		change fixed layout values to responsive
+		change input element for time
+		clean code
+		*/
+		var synth = new Tone.PolySynth(6, Tone.DuoSynth).toMaster();
+		synth.set("detune", -1200);
+		synth.volume.value = -8;
+
+		Polymer({
+			is: 'ma-timer',
+			properties: {
+				_currentTimer: {
+					type: Number
+				},
+				time: {
+					type: Number,
+					value: 0
+				}
+			},
+f
+			_toggleTimer: function() {
+				if (this.currentTimer) {
+					this.endTimer()
+					this.$.button.icon = 'av:play-arrow';
+				} else {
+					this.$.button.icon = 'av:pause';
+					this.startTimer()
+				}
+
+			},
+
+			_count: function() {
+				if (--this.time === 0) {
+					this.endTimer();
+				}
+			},
+
+			_formatTime: function(time) {
+				var seconds = time % 60;
+				var minutes = Math.floor(time / 60);
+				return minutes + ':' + (seconds.toString().length == 1 ? '0' + seconds : seconds);
+			},
+
+			startTimer: function() {
+				if (this.currentTimer == undefined) {
+					this.time = Number(this.$.time.value) * 60;
+					this.currentTimer = window.setInterval(this._count.bind(this), 1000);
+				}
+			},
+
+			endTimer: function() {
+				if (this.currentTimer) {
+					ipcRenderer.send('endTimer');
+					window.clearInterval(this.currentTimer);
+					this.currentTimer = undefined;
+					this.time = 0;
+					this.$.button.icon = 'av:play-arrow';
+				}
+			}
+		});
+	</script>
+</dom-module>
