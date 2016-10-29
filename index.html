@@ -18,18 +18,32 @@
 	<link rel="import" href="elements/ma-timer.html">
 	<style is="custom-style">
 		html,body {
+			margin: 0;
+			-webkit-app-region: drag;
 			padding: 0;
 		}
 
 		#timer {
-			--main-color: #73BFB8;
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			top: 0;
+
+			--main-color:#1B5299;
 			--accent-color: #E55812;
 		}
 	</style>
 </head>
 
-<body unresolved is>
+<body unresolved id="app" is="dom-bind">
 	<ma-timer id="timer"></ma-timer>
 </body>
+
+<script>
+	document.addEventListener("WebComponentsReady", _=> {
+		this.app = document.querySelector("#app");
+	});
+</script>
 
 </html>
